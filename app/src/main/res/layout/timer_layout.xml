@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timer_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/design_default_color_primary"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <TextView
+            android:id="@+id/time_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00:00:00"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="@color/design_default_color_primary"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_timer_in_process" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"/>
+
+        <ImageButton
+            android:id="@+id/delete_timer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
