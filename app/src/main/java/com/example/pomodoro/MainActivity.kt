@@ -1,29 +1,34 @@
 package com.example.pomodoro
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pomodoro.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleObserver {
     private var binding: ActivityMainBinding? = null
     companion object {
         val listOfTimers = mutableListOf<TimerData>()
-
     }
     private val myAdapter = MyAdapter(this)
     private var id = 0
     private var startingMinutes: String = "00:00:00"
-
+    private var startTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        binding!!.recyclerView.itemAnimator!!.removeDuration = 0L
+        startTime = System.currentTimeMillis()
+
         fun calculateInsertedTime(insertedMinutes: Long) {
             when(insertedMinutes) {
                 in 1..59 -> {
@@ -71,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+
     }
 
     fun delete(id: Int) {
@@ -94,5 +101,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
         myAdapter.submitList(listOfTimers.toList())
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onAppBackgrounded() {
+        println("asdasd")
+        val startIntent = Intent(this, ForegroundService::class.java)
+        startIntent.putExtra("COMMAND_ID", "COMMAND_START")
+        startIntent.putExtra("STARTED_TIMER_TIME", startTime)
+        startService(startIntent)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForegrounded() {
+        val stopIntent = Intent(this, ForegroundService::class.java)
+        stopIntent.putExtra("COMMAND_ID", "COMMAND_STOP")
+        startService(stopIntent)
     }
 }
