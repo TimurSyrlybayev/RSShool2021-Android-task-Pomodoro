@@ -11,6 +11,8 @@ class MyAdapter(private val listener: MainActivity) : ListAdapter<TimerData, MyV
 
     override fun areContentsTheSame(oldItem: TimerData, newItem: TimerData) =
         (oldItem.time == newItem.time && oldItem.isWorking == newItem.isWorking)
+
+//    override fun getChangePayload(oldItem: TimerData, newItem: TimerData) = Any()
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -20,9 +22,18 @@ class MyAdapter(private val listener: MainActivity) : ListAdapter<TimerData, MyV
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val list = MainActivity.listOfTimers
-        if(list.size > 0) {
+
+        if(MainActivity.listOfTimers.size > 0) {
+            if (holder.timer != null) {
+                holder!!.timer!!.cancel()
+            }
             holder.initListeners(getItem(position))
-            holder.timeField!!.text = list[position].startingMinutes
+//            holder.timeField!!.text = holder.calculateTime(list[position].time)
         }
+    }
+
+    override fun onViewRecycled(holder: MyViewHolder) {
+        super.onViewRecycled(holder)
+        holder.stop()
     }
 }
